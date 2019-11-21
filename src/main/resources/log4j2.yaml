@@ -126,7 +126,9 @@ Configuration:
             modulate: true
 
   #----------------------------------------------------
-    #will be sent on e-mail
+    # used filters
+    # logging levels: ERROR only
+    # will be sent on e-mail
     SMTP:
       name: MailAppender
       subject: "Error Log"
@@ -141,6 +143,11 @@ Configuration:
       HTMLLayout:
         charset: "UTF-8"
         title: "Logs from task05_log4j project"
+      Filters:
+        ThresholdFilter:
+          level: FATAL
+          onMatch: DENY
+          onMismatch: NEUTRAL
 
   #------------------------------------------------------------------------------------------------
   Loggers:
@@ -173,4 +180,4 @@ Configuration:
           - ref: logFileFilterWarnOnly
             level: warn
           - ref: MailAppender
-            level: all
+            level: error
