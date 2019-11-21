@@ -1,0 +1,50 @@
+Configuration:
+  packages: "com.epam.loggers.example"
+  name: Log4j2_Config
+  properties:
+    property:
+      name: log-path
+      value: logs
+
+#-------------------------------------------------------------------------------
+  appenders:
+    Console:
+      name: Console_Appender
+      PatternLayout:
+        Pattern: "%highlight{%-5level}{FATAL=bg_red} %style{%date{yyyy-MM-dd HH:mm:ss.SSS}}{blue} %class{1}:%L - %highlight{%msg} %xEx{short}%n"
+
+    File:
+    #file will not be overwritten
+    -
+      name: rootLogFile
+      fileName: ${log-path}/rootFile.log
+      PatternLayout:
+        Pattern: "[%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} %class{1}:%L - %msg%xEx{short}%n"
+
+    RollingFile:
+    # file will be overwritten after reaching the size of 500 KB
+    -
+      name: rolFile1
+      fileName: ${log-path}/rollingFile1.log
+      filePattern: ${log-path}/archive/rolFile1.log.%d{yyyy-MM-dd-hh-mm}.gz
+      PatternLayout:
+        Pattern: "[%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} %class{1}:%L - %msg%xEx{short}%n"
+      Policies:
+        SizeBasedTriggeringPolicy:
+          size: 500 KB
+
+
+#-------------------------------------------------------------------------------
+  Loggers:
+    Root:
+      level: all
+      AppenderRef:
+      - ref: rootLogFile
+        level: debug
+
+    Logger:
+      - name: com.epam.Application
+        level: all
+        AppenderRef:
+        - ref: Console_Appender
+          level: trace
