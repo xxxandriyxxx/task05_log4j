@@ -6,45 +6,152 @@ Configuration:
       name: log-path
       value: logs
 
-#-------------------------------------------------------------------------------
+  #------------------------------------------------------------------------------------------------
   appenders:
+
     Console:
-      name: Console_Appender
+    - name: Console_appender
       PatternLayout:
-        Pattern: "%highlight{%-5level}{FATAL=bg_red} %style{%date{yyyy-MM-dd HH:mm:ss.SSS}}{blue} %class{1}:%L - %highlight{%msg} %xEx{short}%n"
+        Pattern: "%highlight{%-5level}{FATAL=bg_red} %style{%date{yyyy-MM-dd HH:mm:ss.SSS}}{blue}
+        %class{1}:%L - %highlight{%msg} %xEx{short}%n"
 
+    # used filters
+    # logging levels: INFO only
+    - name: Console_appender_INFO only
+      PatternLayout:
+        Pattern: "%highlight{%-5level}{INFO=bg_blue} %style{%date{yyyy-MM-dd HH:mm:ss.SSS}}{red}
+        %class{1}:%L - %highlight{%msg} %xEx{short}%n"
+      Filters:
+        ThresholdFilter:
+          level: WARN
+          onMatch: DENY
+          onMismatch: NEUTRAL
+
+  #----------------------------------------------------
     File:
-    #file will not be overwritten
-    -
-      name: rootLogFile
-      fileName: ${log-path}/rootFile.log
-      PatternLayout:
-        Pattern: "[%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} %class{1}:%L - %msg%xEx{short}%n"
+      # logging levels: ALL
+      # file will not be overwritten
+      -
+        name: rootLogFile
+        fileName: ${log-path}/rootFile.log
+        PatternLayout:
+          Pattern: "[%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} %class{1}:%L - %msg%xEx{short}%n"
 
+      # logging levels: DEBUG and lower
+      -
+        name: logFileDebug
+        fileName: ${log-path}/logFileDebug.log
+        PatternLayout:
+          Pattern: "[%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} %class{1}:%L - %msg%xEx{short}%n"
+
+      # used filters
+      # logging levels: higher than WARN
+      -
+        name: logFileFilterHigherThanWarn
+        fileName: ${log-path}/logFileFilterHigherThanWarn.log
+        PatternLayout:
+          Pattern: "[%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} %class{1}:%L - %msg%xEx{short}%n"
+        Filters:
+          ThresholdFilter:
+            level: warn
+            onMatch: DENY
+            onMismatch: NEUTRAL
+
+      # used filters
+      # logging levels: ERROR and lower
+      -
+        name: logFileFilterErrorAndLower
+        fileName: ${log-path}/logFileFilterErrorAndLower.log
+        PatternLayout:
+          Pattern: "[%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} %class{1}:%L - %msg%xEx{short}%n"
+        Filters:
+          ThresholdFilter:
+            level: error
+            onMatch: NEUTRAL
+            onMismatch: DENY
+
+      # used filters
+      # logging levels: WARN only
+      - name: logFileFilterWarnOnly
+        fileName: ${log-path}/logFileFilterWarnOnly.log
+        PatternLayout:
+          Pattern: "[%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} %class{1}:%L - %msg%xEx{short}%n"
+        Filters:
+          ThresholdFilter:
+            level: error
+            onMatch: DENY
+            onMismatch: NEUTRAL
+
+  #----------------------------------------------------
     RollingFile:
-    # file will be overwritten after reaching the size of 500 KB
-    -
-      name: rolFile1
-      fileName: ${log-path}/rollingFile1.log
-      filePattern: ${log-path}/archive/rolFile1.log.%d{yyyy-MM-dd-hh-mm}.gz
-      PatternLayout:
-        Pattern: "[%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} %class{1}:%L - %msg%xEx{short}%n"
-      Policies:
-        SizeBasedTriggeringPolicy:
-          size: 500 KB
+      # logging levels: INFO and lower
+      # file will be overwritten after reaching the size of 1 MB
+      -
+        name: rolFileInfo
+        fileName: ${log-path}/rolFileInfo.log
+        # save to archive
+        filePattern: ${log-path}/archive/rolFileInfo.log.%d{yyyy-MM-dd-hh-mm}.gz
+        PatternLayout:
+          Pattern: "[%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} %class{1}:%L - %msg%xEx{short}%n"
+        Policies:
+          SizeBasedTriggeringPolicy:
+            size: 1 MB
 
+      # logging levels: WARN and lower
+      # file will be overwritten every day at 04:00 AM
+      -
+        name: rolFileEveryDayOverwrite
+        fileName: ${log-path}/rolFileEveryDayOverwrite.log
+        filePattern: ${log-path}/archive/rolFileEveryDayOverwrite_old.log
+        PatternLayout:
+          Pattern: "[%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} %class{1}:%L - %msg%xEx{short}%n"
+        CronTriggeringPolicy:
+          schedule: "0 0 04 ? * *"
+          evaluateOnStartup: true
+        DefaultRolloverStrategy:
+          max: 1
 
-#-------------------------------------------------------------------------------
+      # logging levels: FATAL
+      # every day log will be written to a new file
+      -
+        name: rolFileEveryDayArchiving
+        fileName: ${log-path}/rolFileEveryDayArchiving.log
+        # without archiving
+        filePattern: ${log-path}/archive/rolFileEveryDayArchiving-%d{yy-MM-dd}.log
+        PatternLayout:
+          Pattern: "[%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} %class{1}:%L - %msg%xEx{short}%n"
+        Policies:
+          TimeBasedTriggeringPolicy:
+            interval: 1
+            modulate: true
+
+  #-------------------------------------------------------------------------------
   Loggers:
     Root:
       level: all
       AppenderRef:
-      - ref: rootLogFile
-        level: debug
+        - ref: rootLogFile
+          level: debug
 
     Logger:
       - name: com.epam.Application
         level: all
         AppenderRef:
-        - ref: Console_Appender
-          level: trace
+          - ref: Console_appender
+            level: trace
+          - ref: Console_appender_INFO only
+            level: info
+          - ref: logFileDebug
+            level: debug
+          - ref: rolFileInfo
+            level: info
+          - ref: logFileFilterHigherThanWarn
+            level: all
+          - ref: logFileFilterErrorAndLower
+            level: all
+          - ref: rolFileEveryDayOverwrite
+            level: warn
+          - ref: rolFileEveryDayArchiving
+            level: fatal
+          - ref: logFileFilterWarnOnly
+            level: warn
