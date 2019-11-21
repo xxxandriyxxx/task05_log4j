@@ -7,7 +7,18 @@
     <groupId>com.epam</groupId>
     <artifactId>task05_log4j</artifactId>
     <version>1.0</version>
-
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>6</source>
+                    <target>6</target>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 
     <dependencies>
         <!--log4j2-->
@@ -21,6 +32,7 @@
             <artifactId>log4j-core</artifactId>
             <version>2.9.1</version>
         </dependency>
+
         <!--yaml-->
         <dependency>
             <groupId>com.fasterxml.jackson.dataformat</groupId>
@@ -31,6 +43,20 @@
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
             <version>2.9.4</version>
+        </dependency>
+
+        <!--SMTP-->
+        <dependency>
+            <groupId>com.sun.mail</groupId>
+            <artifactId>javax.mail</artifactId>
+            <version>1.5.1</version>
+        </dependency>
+
+        <!--SMS-->
+        <dependency>
+            <groupId>com.twilio.sdk</groupId>
+            <artifactId>twilio</artifactId>
+            <version>(7.11.0,7.12.0]</version>
         </dependency>
     </dependencies>
 
