@@ -125,7 +125,24 @@ Configuration:
             interval: 1
             modulate: true
 
-  #-------------------------------------------------------------------------------
+  #----------------------------------------------------
+    #will be sent on e-mail
+    SMTP:
+      name: MailAppender
+      subject: "Error Log"
+      to: "fortest888333@gmail.com"
+      from: "fortest888333@gmail.com"
+      smtpHost: "smtp.gmail.com"
+      smtpPort: 465
+      smtpProtocol: smtps
+      smtpUsername: "fortest888333@gmail.com"
+      smtpPassword: "53895389"
+      bufferSize: 512
+      HTMLLayout:
+        charset: "UTF-8"
+        title: "Logs from task05_log4j project"
+
+  #------------------------------------------------------------------------------------------------
   Loggers:
     Root:
       level: all
@@ -155,3 +172,5 @@ Configuration:
             level: fatal
           - ref: logFileFilterWarnOnly
             level: warn
+          - ref: MailAppender
+            level: all
