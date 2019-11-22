@@ -126,9 +126,9 @@ Configuration:
             modulate: true
 
   #----------------------------------------------------
+    # mail appender
     # used filters
     # logging levels: ERROR only
-    # will be sent on e-mail
     SMTP:
       name: MailAppender
       subject: "Error Log"
@@ -161,8 +161,6 @@ Configuration:
       AppenderRef:
         ref: SMSsender
 
-
-
   #------------------------------------------------------------------------------------------------
   Loggers:
     Root:
@@ -177,8 +175,6 @@ Configuration:
         AppenderRef:
           - ref: Console_appender
             level: trace
-          - ref: Console_appender_INFO only
-            level: info
           - ref: logFileDebug
             level: debug
           - ref: rolFileInfo
@@ -193,7 +189,13 @@ Configuration:
             level: fatal
           - ref: logFileFilterWarnOnly
             level: warn
-          - ref: MailAppender
-            level: error
-          - ref: AsyncSMS
-            level: fatal
+
+      - name: com.epam.SomeClass
+        level: all
+        AppenderRef:
+        - ref: Console_appender_INFO only
+          level: info
+        - ref: MailAppender
+          level: error
+        - ref: AsyncSMS
+          level: fatal
