@@ -12,5 +12,7 @@ public class Application {
         logger1.warn("This is a warn message");
         logger1.error("This is an error message");
         logger1.fatal("This is a fatal message");
+        SomeClass.GenerateLog();
     }
+
 }
