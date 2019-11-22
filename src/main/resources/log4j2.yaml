@@ -149,6 +149,20 @@ Configuration:
           onMatch: DENY
           onMismatch: NEUTRAL
 
+  #----------------------------------------------------
+  # SMS appender
+    SMS:
+      name: SMSsender
+      PatternLayout:
+        Pattern: "[%-5level] %d{yyyy-MM-dd HH:mm:ss} - %msg %xEx{short}"
+
+    Async:
+      name: AsyncSMS
+      AppenderRef:
+        ref: SMSsender
+
+
+
   #------------------------------------------------------------------------------------------------
   Loggers:
     Root:
@@ -181,3 +195,5 @@ Configuration:
             level: warn
           - ref: MailAppender
             level: error
+          - ref: AsyncSMS
+            level: fatal
