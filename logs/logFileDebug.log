@@ -1,0 +1,5 @@
+[DEBUG] 2019-11-22 02:43:55.708 Application:10 - This is a debug message
+[INFO ] 2019-11-22 02:43:55.709 Application:11 - This is an info message
+[WARN ] 2019-11-22 02:43:55.710 Application:12 - This is a warn message
+[ERROR] 2019-11-22 02:43:55.713 Application:13 - This is an error message
+[FATAL] 2019-11-22 02:43:55.714 Application:14 - This is a fatal message

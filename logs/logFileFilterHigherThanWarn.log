@@ -1,0 +1,3 @@
+[TRACE] 2019-11-22 02:43:55.698 Application:9 - This is a trace message
+[DEBUG] 2019-11-22 02:43:55.708 Application:10 - This is a debug message
+[INFO ] 2019-11-22 02:43:55.709 Application:11 - This is an info message
