@@ -7,7 +7,7 @@ public class SomeClass {
 
     private static Logger logger2 = LogManager.getLogger(Application.class);
 
-    public static void GenerateLog(String[] args) {
+    public static void GenerateLog() {
         logger2.trace("This is a trace message !!!");
         logger2.debug("This is a debug message !!!");
         logger2.info("This is an info message !!!");
@@ -15,5 +15,5 @@ public class SomeClass {
         logger2.error("This is an error message !!!");
         logger2.fatal("This is a fatal message !!!");
     }
-    
+
 }
