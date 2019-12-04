@@ -7,3 +7,6 @@
 log/
 target/
 
+# Twilio token
+token.txt
+
